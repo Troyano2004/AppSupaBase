@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.appsupabase.adapters.AlumnoAdapter
+import com.example.appsupabase.models.Alumno
 import com.example.appsupabase.models.Materia
 import com.example.appsupabase.services.SupabaseErrorHandler
 import com.example.appsupabase.services.SupabaseManager
@@ -30,7 +32,7 @@ class maincontenedor1 : AppCompatActivity() {
 
         val listaCategorias = findViewById<AutoCompleteTextView>(R.id.listaCategorias)
         val listaMaterias = findViewById<AutoCompleteTextView>(R.id.listaMaterias)
-        val lvMaterias = findViewById<ListView>(R.id.lvMaterias)
+        val lvAlumnos = findViewById<ListView>(R.id.lvMaterias)
 
         listaCategorias.setOnItemClickListener { _, _, position, _ ->
             val lstMaterias = ArrayList<String>()
@@ -62,13 +64,27 @@ class maincontenedor1 : AppCompatActivity() {
                         lstMaterias
                     )
                     listaMaterias.setAdapter(adapter)
+                }
+            }
+        }
 
-                    val adapterLv = ArrayAdapter(
-                        this@maincontenedor1,
-                        android.R.layout.simple_list_item_1,
-                        lstMaterias
+        listaMaterias.setOnItemClickListener { _, _, _, _ ->
+            var lstAlumnos = ArrayList<Alumno>()
+            lifecycleScope.launch {
+                try {
+                    lstAlumnos = ArrayList(
+                        SupabaseManager.client
+                            .from("alumnos")
+                            .select {
+                                order("nombres", Order.ASCENDING)
+                            }
+                            .decodeList<Alumno>()
                     )
-                    lvMaterias.adapter = adapterLv
+                } catch (e: RestException) {
+                    SupabaseErrorHandler.show(this@maincontenedor1, e)
+                } finally {
+                    val adapter = AlumnoAdapter(this@maincontenedor1, lstAlumnos)
+                    lvAlumnos.adapter = adapter
                 }
             }
         }

@@ -9,6 +9,6 @@ data class Alumno (
     val correo: String? = null,
     val telefono: String? = null,
     val paralelo: String? = null,
-    val FOTO: String? = null,
+    val foto: String? = null,
 
     )

@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.appsupabase"
-        minSdk = 34
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -40,6 +40,8 @@ dependencies {
     implementation(platform(libs.bom))
     implementation(libs.postgrest.kt)
     implementation(libs.ktor.client.android)
+    implementation(libs.glide)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
